@@ -2,6 +2,7 @@ import { useState } from "react";
 import Input from "../common/Input";
 import Button from "../common/Button";
 import { Link } from "react-router-dom";
+import axios from "axios"
 
 const SignupForm = () => {
   const [form, setForm] = useState({

@@ -2,11 +2,26 @@ import { useState } from "react";
 import Input from "../common/Input";
 import Button from "../common/Button";
 import { Link } from "react-router-dom";
+import axios from "axios"
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const getLogin = async()=>
+  {
+  try{
+ const res = await axios.post(
+      "http://localhost:3005/api/auth/signup",
+      email,
+      password
+    );
+
+    console.log("Signup Success:", res.data);  }
+  catch(err)
+  {
+console.log(err.response?.data || err.message);  }
+  }
   const handleLogin = () => {
     console.log(email, password);
   };
