@@ -19,6 +19,7 @@ app.use(express.json());
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/boards", require("./routes/board")); 
 app.use("/api/lists",require("./routes/list"))
+app.use("/api/cards", require("./routes/card"));
 // server start
 const PORT = process.env.PORT || 5000;
 

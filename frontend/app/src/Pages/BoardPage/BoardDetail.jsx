@@ -29,36 +29,50 @@ const fetchLists = async () => {
     }
   };
 
-  return (
-    <div
-      className="h-screen flex flex-col"
-      style={{
-        background: board?.image
-          ? `url(${board.image}) center/cover`
-          : board?.color || "#1e293b",
-      }}
-    >
-      {/* ✅ HEADER (FIXED) */}
-      <div className="h-14 flex items-center px-6 backdrop-blur-md bg-black/30 text-white font-semibold text-lg capitalize">
+return (
+  <div
+    className="h-screen flex flex-col overflow-hidden"
+    style={{
+      background: board?.image
+        ? `url(${board.image}) center/cover`
+        : board?.color || "#1e293b",
+    }}
+  >
+
+    {/* ✅ HEADER */}
+    <div className="h-14 flex items-center justify-between px-6 bg-black/30 backdrop-blur-md text-white">
+
+      {/* TITLE */}
+      <h2 className="font-semibold text-lg capitalize">
         {board?.title}
-      </div>
+      </h2>
 
-      {/* ✅ SCROLL ONLY THIS */}
-      <div className="flex-1 overflow-x-auto overflow-y-hidden p-4">
-        <div className="flex gap-4 w-max">
+      {/* RIGHT SIDE ICONS */}
+      <div className="flex items-center gap-4">
 
-          {/* LISTS */}
-          {lists.map((list) => (
-            <List key={list._id} list={list} />
-          ))}
+        {/* ⭐ STAR */}
+        <button className="text-xl hover:scale-110 transition">
+          ⭐
+        </button>
 
-          {/* ADD LIST */}
-          <AddList boardId={id} refresh={fetchLists} />
-
-        </div>
       </div>
     </div>
-  );
+
+    {/* ✅ ONLY THIS SCROLLS */}
+    <div className="flex-1 overflow-x-auto overflow-y-hidden p-4">
+      <div className="flex gap-4 w-max">
+
+        {lists.map((list) => (
+          <List key={list._id} list={list} />
+        ))}
+
+        <AddList boardId={id} refresh={fetchLists} />
+
+      </div>
+    </div>
+
+  </div>
+);
 };
 
 export default BoardDetail;
