@@ -2,7 +2,7 @@ import { useState } from "react";
 import Input from "../common/Input";
 import Button from "../common/Button";
 import { Link } from "react-router-dom";
-import axios from "axios"
+import ApiClient from "../../api/apiClient";
 
 const SignupForm = () => {
   const [form, setForm] = useState({
@@ -17,9 +17,26 @@ const SignupForm = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSignup = () => {
-    console.log(form);
-  };
+ const handleSignup = async () => {
+
+  if (form.password !== form.confirmPassword) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  const res = await ApiClient.post("/auth/signup", {
+    fname: form.firstName,
+    lname: form.lastName,
+    email: form.email,
+    password: form.password
+  });
+
+  if (res.success) {
+    alert("Signup Successful");
+  } else {
+    alert(res.message);
+  }
+};
 
   return (
     <div className="w-[420px] bg-white p-8 rounded-2xl shadow-lg">

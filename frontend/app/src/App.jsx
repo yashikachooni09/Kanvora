@@ -1,25 +1,75 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 import Login from "./Pages/Login/Login";
 import Signup from "./Pages/Signup/Signup";
 import MainLayout from "./Components/common/layout/MainLayout";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import { Page } from "./Pages/MainPage/Page";
+import BoardsPage from "./Pages/BoardPage/BoardPage";
+
+// ✅ Protected Route Component
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+
+  return token ? children : <Navigate to="/login" />;
+};
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // auto login check
+    setLoading(false);
+  }, []);
+
+  if (loading) return <h2>Loading...</h2>;
+
   return (
-    <MainLayout>
     <Routes>
-      {/* Default route */}
-      <Route path="/" element={<Dashboard/>}/>
 
-      {/* Auth routes */}
-      <Route path="/page" element={<Page/>}/>
-      {/* <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} /> */}
+      {/* ✅ Public Routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
 
-      <Route path="*" element={<h1>Page Not Found</h1>} />
+      {/* ✅ Protected Routes with Layout */}
+      <Route
+        path="/"
+        element={
+          <PrivateRoute>
+            <MainLayout>
+              <Dashboard />
+            </MainLayout>
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/page"
+        element={
+          <PrivateRoute>
+            <MainLayout>
+              <Page />
+            </MainLayout>
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/boards"
+        element={
+          <PrivateRoute>
+            <MainLayout>
+              <BoardsPage />
+            </MainLayout>
+          </PrivateRoute>
+        }
+      />
+
+      {/* ✅ Catch all */}
+      <Route path="*" element={<Navigate to="/" />} />
+
     </Routes>
-    </MainLayout>
   );
 }
 

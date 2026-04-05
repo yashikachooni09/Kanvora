@@ -1,22 +1,23 @@
 import { useState } from "react";
 import {
-  FaTrello,
   FaStar,
   FaPlus,
   FaCog,
 } from "react-icons/fa";
 import { MdDashboard, MdViewKanban } from "react-icons/md";
 import { HiMenuAlt2 } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
+  const navigate = useNavigate();
 
   const menuItems = [
-    { name: "Dashboard", icon: <MdDashboard /> },
-    { name: "Boards", icon: <MdViewKanban /> },
-    { name: "Create Board", icon: <FaPlus /> },
-    { name: "Starred", icon: <FaStar /> },
-    { name: "Settings", icon: <FaCog /> },
+    { name: "Dashboard", icon: <MdDashboard />, path: "/" },
+    { name: "Boards", icon: <MdViewKanban />, path: "/boards" },
+    { name: "Create Board", icon: <FaPlus />, path: "/boards" },
+    { name: "Starred", icon: <FaStar />, path: "/starred" },
+    { name: "Settings", icon: <FaCog />, path: "/settings" },
   ];
 
   return (
@@ -41,7 +42,6 @@ const Sidebar = () => {
         <div className="flex items-center justify-between p-4 border-b border-slate-700">
           {open && (
             <div className="flex items-center gap-2">
-              {/* LOGO */}
               <div className="bg-indigo-600 text-white p-2 rounded-lg shadow-md">
                 <MdViewKanban />
               </div>
@@ -62,6 +62,10 @@ const Sidebar = () => {
           {menuItems.map((item, index) => (
             <li
               key={index}
+              onClick={() => {
+                navigate(item.path);
+                setOpen(false); // mobile pe close
+              }}
               className="flex items-center gap-3 p-3 rounded-xl cursor-pointer
               hover:bg-slate-700/60 transition-all duration-200 group"
             >

@@ -1,4 +1,10 @@
 const Navbar = () => {
+
+  const handleLogout = () => {
+  localStorage.removeItem("token");
+  window.location.href = "/login";
+};
+
   return (
     <div className="flex items-center justify-between px-6 py-3 
     bg-[#1e293b] border-b border-slate-700 shadow-sm">
@@ -32,7 +38,7 @@ const Navbar = () => {
         </div>
 
         {/* Logout */}
-        <button className="px-4 py-1.5 rounded-lg text-sm font-medium
+        <button onClick={handleLogout} className="px-4 py-1.5 rounded-lg text-sm font-medium
         bg-[#334155] text-slate-200
         hover:bg-indigo-600 hover:text-white
         transition-all duration-200">

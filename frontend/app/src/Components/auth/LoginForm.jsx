@@ -1,31 +1,32 @@
 import { useState } from "react";
 import Input from "../common/Input";
 import Button from "../common/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"
+import ApiClient from "../../api/apiClient";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const getLogin = async()=>
-  {
-  try{
- const res = await axios.post(
-      "http://localhost:3005/api/auth/signup",
-      email,
-      password
-    );
+const handleLogin = async () => {
+  console.log("clicked");
 
-    console.log("Signup Success:", res.data);  }
-  catch(err)
-  {
-console.log(err.response?.data || err.message);  }
+  const res = await ApiClient.post("/auth/login", {
+    email,
+    password
+  });
+
+  console.log("Response:", res);
+
+  if (res.success) {
+    localStorage.setItem("token", res.token);
+    navigate("/");
+  } else {
+    alert(res.message);
   }
-  const handleLogin = () => {
-    console.log(email, password);
-  };
-
+};
   return (
     <div className="w-[380px] bg-white p-8 rounded-2xl shadow-lg">
       
