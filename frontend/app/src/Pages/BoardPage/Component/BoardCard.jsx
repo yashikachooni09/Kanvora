@@ -5,21 +5,17 @@ const BoardCard = ({ board }) => {
 
   return (
     <div
-      onClick={() => navigate(`/board/${board._id}`)}
-      className="h-28 rounded-xl p-4 cursor-pointer 
-      bg-gradient-to-r from-indigo-500 to-purple-500
-      text-white shadow-md hover:shadow-xl 
-      transition-all duration-300 transform hover:-translate-y-1"
+      onClick={() => navigate(`/boards/${board._id}`)}
+      className="h-32 rounded-xl p-3 cursor-pointer shadow-md hover:scale-105 transition-all duration-200 text-white flex items-end"
+      style={{
+        background: board.image
+          ? `url(${board.image}) center/cover`
+          : board.color,
+      }}
     >
-      {/* Title */}
-      <h2 className="text-lg font-semibold truncate">
+      <h2 className="font-semibold text-lg bg-black/40 px-2 py-1 rounded capitalize">
         {board.title}
       </h2>
-
-      {/* Footer (optional future use) */}
-      <div className="mt-4 text-xs opacity-80">
-        Click to open board
-      </div>
     </div>
   );
 };

@@ -7,6 +7,7 @@ import {
 import { MdDashboard, MdViewKanban } from "react-icons/md";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
+import { MdMessage } from "react-icons/md";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
@@ -16,6 +17,7 @@ const Sidebar = () => {
     { name: "Dashboard", icon: <MdDashboard />, path: "/" },
     { name: "Boards", icon: <MdViewKanban />, path: "/boards" },
     { name: "Create Board", icon: <FaPlus />, path: "/boards" },
+      { name: "Inbox", icon: <MdMessage />, path: "/inbox" },
     { name: "Starred", icon: <FaStar />, path: "/starred" },
     { name: "Settings", icon: <FaCog />, path: "/settings" },
   ];

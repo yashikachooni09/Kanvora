@@ -7,6 +7,7 @@ import MainLayout from "./Components/common/layout/MainLayout";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import { Page } from "./Pages/MainPage/Page";
 import BoardsPage from "./Pages/BoardPage/BoardPage";
+import BoardDetails from "./Pages/BoardPage/BoardDetail";
 
 // ✅ Protected Route Component
 const PrivateRoute = ({ children }) => {
@@ -65,7 +66,16 @@ function App() {
           </PrivateRoute>
         }
       />
-
+      <Route
+  path="/boards/:id"
+  element={
+    <PrivateRoute>
+      <MainLayout>
+        <BoardDetails />
+      </MainLayout>
+    </PrivateRoute>
+  }
+/>
       {/* ✅ Catch all */}
       <Route path="*" element={<Navigate to="/" />} />
 

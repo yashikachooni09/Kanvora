@@ -40,7 +40,7 @@ const CreateBoardModal = ({ onClose, refreshBoards }) => {
       if (res.success) {
         refreshBoards();
         onClose();
-        navigate(`/board/${res.data._id}`);
+        navigate(`/boards/${res.data._id}`);
       }
     } catch (err) {
       console.log(err);

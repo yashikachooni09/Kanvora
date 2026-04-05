@@ -1,19 +1,64 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import ApiClient from "../../api/apiClient";
+import List from "./Component/List";
+import AddList from "./Component/AddList";
 
-const BoardDetails = () => {
+const BoardDetail = () => {
   const { id } = useParams();
 
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">
-        Board Details Page
-      </h1>
+  const [board, setBoard] = useState(null);
+  const [lists, setLists] = useState([]);
 
-      <p className="mt-4 text-gray-600">
-        Board ID: {id}
-      </p>
+const fetchLists = async () => {
+  const res = await ApiClient.get(`/lists?boardId=${id}`);
+  if (res.success) {
+    setLists(res.data);
+  }
+};
+
+  useEffect(() => {
+    fetchBoard();
+    fetchLists();
+  }, []);
+
+  const fetchBoard = async () => {
+    const res = await ApiClient.get(`/boards/${id}`);
+    if (res.success) {
+      setBoard(res.data);
+    }
+  };
+
+  return (
+    <div
+      className="h-screen flex flex-col"
+      style={{
+        background: board?.image
+          ? `url(${board.image}) center/cover`
+          : board?.color || "#1e293b",
+      }}
+    >
+      {/* ✅ HEADER (FIXED) */}
+      <div className="h-14 flex items-center px-6 backdrop-blur-md bg-black/30 text-white font-semibold text-lg capitalize">
+        {board?.title}
+      </div>
+
+      {/* ✅ SCROLL ONLY THIS */}
+      <div className="flex-1 overflow-x-auto overflow-y-hidden p-4">
+        <div className="flex gap-4 w-max">
+
+          {/* LISTS */}
+          {lists.map((list) => (
+            <List key={list._id} list={list} />
+          ))}
+
+          {/* ADD LIST */}
+          <AddList boardId={id} refresh={fetchLists} />
+
+        </div>
+      </div>
     </div>
   );
 };
 
-export default BoardDetails;
+export default BoardDetail;

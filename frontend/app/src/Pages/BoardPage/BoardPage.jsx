@@ -7,12 +7,12 @@ const BoardsPage = () => {
   const [boards, setBoards] = useState([]);
   const [openModal, setOpenModal] = useState(false);
 
-  const fetchBoards =  () => {
-      const res =  ApiClient.get("/boards");
-      if (res.success) {
-        setBoards(res.data);
-      }
-  };
+const fetchBoards = async () => {
+  const res = await ApiClient.get("/boards");
+  if (res.success) {
+    setBoards(res.data);
+  }
+};
 
   useEffect(() => {
     fetchBoards();
