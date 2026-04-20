@@ -1,13 +1,15 @@
-import Navbar from "../Navbar/Navbar"
-import Sidebar from "../sidebar/Sidebar"
+import Navbar from "../Navbar/Navbar";
+import Sidebar from "../sidebar/Sidebar";
 
 const MainLayout = ({ children }) => {
   return (
-    <div className="flex h-screen bg-gray-300 text-black">
+    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 md:flex-row">
       <Sidebar />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col overflow-hidden">
         <Navbar />
-        <div className="p-4 overflow-auto">{children}</div>
+        <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
+          {children}
+        </main>
       </div>
     </div>
   );

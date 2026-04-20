@@ -42,3 +42,23 @@ exports.getCards = async (req, res) => {
     });
   }
 };
+
+exports.moveCard = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { listId, position } = req.body;
+
+    const card = await Card.findByIdAndUpdate(
+      id,
+      { listId, position },
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      data: card,
+    });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+};

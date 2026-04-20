@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { MdOutlinePerson, MdOutlineMail, MdLock } from "react-icons/md";
 import Input from "../common/Input";
 import Button from "../common/Button";
-import { Link } from "react-router-dom";
 import ApiClient from "../../api/apiClient";
 
 const SignupForm = () => {
@@ -10,50 +11,61 @@ const SignupForm = () => {
     lastName: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
- const handleSignup = async () => {
+  const validate = () => {
+    const currentErrors = {};
 
-  if (form.password !== form.confirmPassword) {
-    alert("Passwords do not match");
-    return;
-  }
+    if (!form.firstName.trim()) currentErrors.firstName = "First name is required.";
+    if (!form.lastName.trim()) currentErrors.lastName = "Last name is required.";
+    if (!form.email.trim()) currentErrors.email = "Email is required.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) currentErrors.email = "Enter a valid email address.";
+    if (!form.password.trim()) currentErrors.password = "Password is required.";
+    if (form.password !== form.confirmPassword) currentErrors.confirmPassword = "Passwords do not match.";
 
-  const res = await ApiClient.post("/auth/signup", {
-    fname: form.firstName,
-    lname: form.lastName,
-    email: form.email,
-    password: form.password
-  });
+    setErrors(currentErrors);
+    return Object.keys(currentErrors).length === 0;
+  };
 
-  if (res.success) {
-    alert("Signup Successful");
-  } else {
-    alert(res.message);
-  }
-};
+  const handleSignup = async () => {
+    if (!validate()) return;
+
+    const res = await ApiClient.post("/auth/signup", {
+      fname: form.firstName,
+      lname: form.lastName,
+      email: form.email,
+      password: form.password,
+    });
+
+    if (res.success) {
+      alert("Signup successful. You can now log in.");
+    } else {
+      alert(res.message);
+    }
+  };
 
   return (
-    <div className="w-[420px] bg-white p-8 rounded-2xl shadow-lg">
+    <div className="w-full max-w-xl rounded-[32px] bg-slate-950/95 border border-slate-800 px-8 py-10 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
+      <div className="mb-8">
+        <h2 className="text-3xl font-semibold text-slate-100">Create your account</h2>
+        <p className="mt-3 text-sm text-slate-400">Get started in under 2 minutes, for free.</p>
+      </div>
 
-      <h2 className="text-2xl font-semibold mb-2">Create your account</h2>
-      <p className="text-gray-500 mb-6">
-        Get started in under 2 minutes, for free.
-      </p>
-
-      {/* Name Fields */}
-      <div className="flex gap-4">
+      <div className="grid gap-4 sm:grid-cols-2">
         <Input
           label="First Name"
           name="firstName"
           placeholder="Jane"
           value={form.firstName}
           onChange={handleChange}
+          icon={<MdOutlinePerson className="text-xl" />}
+          error={errors.firstName}
         />
         <Input
           label="Last Name"
@@ -61,6 +73,8 @@ const SignupForm = () => {
           placeholder="Doe"
           value={form.lastName}
           onChange={handleChange}
+          icon={<MdOutlinePerson className="text-xl" />}
+          error={errors.lastName}
         />
       </div>
 
@@ -71,6 +85,8 @@ const SignupForm = () => {
         placeholder="jane@company.com"
         value={form.email}
         onChange={handleChange}
+        icon={<MdOutlineMail className="text-xl" />}
+        error={errors.email}
       />
 
       <Input
@@ -80,6 +96,8 @@ const SignupForm = () => {
         placeholder="Create a strong password"
         value={form.password}
         onChange={handleChange}
+        icon={<MdLock className="text-xl" />}
+        error={errors.password}
       />
 
       <Input
@@ -89,25 +107,26 @@ const SignupForm = () => {
         placeholder="Repeat password"
         value={form.confirmPassword}
         onChange={handleChange}
+        icon={<MdLock className="text-xl" />}
+        error={errors.confirmPassword}
       />
 
-      {/* Terms */}
-      <div className="flex items-center gap-2 text-sm mb-4">
-        <input type="checkbox" />
-        <span>
-          I agree to Terms & Privacy Policy
-        </span>
+      <div className="flex items-center gap-3 text-sm text-slate-400 mb-6">
+        <input
+          type="checkbox"
+          className="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500"
+        />
+        <span>I agree to the Terms & Privacy Policy.</span>
       </div>
 
       <Button text="Create Free Account" onClick={handleSignup} />
 
-      <p className="text-sm text-gray-500 mt-4 text-center">
-        Already have an account? 
-        <span className="text-indigo-600 cursor-pointer ml-1">
-        <Link to="/login">Sign in </Link>
-        </span>
+      <p className="mt-6 text-center text-sm text-slate-400">
+        Already have an account?
+        <Link to="/login" className="ml-1 font-semibold text-cyan-300 transition hover:text-cyan-100">
+          Sign in
+        </Link>
       </p>
-
     </div>
   );
 };
