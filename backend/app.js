@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const path = require("path");
 const connectDB = require("./config/db");
 
 // load env variables
@@ -14,12 +15,15 @@ const app = express();
 // middleware
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve uploaded files
 
 // routes
 app.use("/api/auth", require("./routes/auth"));
-app.use("/api/boards", require("./routes/board")); 
-app.use("/api/lists",require("./routes/list"))
+app.use("/api/workspace", require("./routes/workspace"));
+app.use("/api/boards", require("./routes/board"));
+app.use("/api/lists", require("./routes/list"));
 app.use("/api/cards", require("./routes/card"));
+app.use("/api/search", require("./routes/search"));
 // server start
 const PORT = process.env.PORT || 5000;
 

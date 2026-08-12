@@ -1,5 +1,5 @@
 import axios from "axios";
-import Swal from "sweetalert2";
+import toast from "react-hot-toast";
 import environment from "../config/environment";
 import setAuthorizationToken from "./setAuthToken";
 
@@ -22,8 +22,8 @@ const imageConfig = {
 // ✅ Error handler
 const handleError = (error, hideError = false) => {
   let message =
-    error?.message ||
     error?.response?.data?.message ||
+    error?.message ||
     "Something went wrong";
 
   // 🔴 Token expired / unauthorized
@@ -33,11 +33,7 @@ const handleError = (error, hideError = false) => {
   }
 
   if (!hideError) {
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: message,
-    });
+    toast.error(message);
   }
 };
 
@@ -49,8 +45,12 @@ class ApiClient {
     try {
       setAuthorizationToken(); // attach token
 
+      // Check if payload is FormData
+      const isFormData = payload instanceof FormData;
+      const postConfig = isFormData ? imageConfig : config;
+
       const response = await axios.post(fullUrl, payload, {
-        ...config,
+        ...postConfig,
         params,
       });
 

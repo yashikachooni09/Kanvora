@@ -1,158 +1,230 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { FiX, FiImage } from "react-icons/fi";
+import { IoColorPalette } from "react-icons/io5";
 import ApiClient from "../../../api/apiClient";
-
-const colors = [
-  "#4f46e5",
-  "#9333ea",
-  "#ec4899",
-  "#ef4444",
-  "#f97316",
-  "#eab308",
-  "#22c55e",
-  "#06b6d4",
-];
-
-const images = [
-  "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
-  "https://wallpaperaccess.com/full/3274939.jpg",
-  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
-  "https://img.freepik.com/free-vector/flower-memphis-line-art-abstract-background-vector_53876-154336.jpg?semt=ais_incoming&w=740&q=80",
-  "https://img.freepik.com/free-photo/abstract-flowing-neon-wave-background_53876-101942.jpg",
-];
+import toast from "react-hot-toast";
 
 const CreateBoardModal = ({ onClose, refreshBoards }) => {
   const [title, setTitle] = useState("");
-  const [selectedColor, setSelectedColor] = useState(colors[0]);
-  const [selectedImage, setSelectedImage] = useState("");
+  const [description, setDescription] = useState("");
+  const [color, setColor] = useState("#4f46e5"); // Default indigo color
+  const [image, setImage] = useState("");
+  const [loading, setLoading] = useState(false);
   const [visibility, setVisibility] = useState("private");
 
-  const navigate = useNavigate();
+  const colorOptions = [
+    { name: "Indigo", value: "#4f46e5" },
+    { name: "Cyan", value: "#0891b2" },
+    { name: "Emerald", value: "#10b981" },
+    { name: "Rose", value: "#e11d48" },
+    { name: "Amber", value: "#d97706" },
+    { name: "Purple", value: "#9333ea" },
+    { name: "Slate", value: "#475569" },
+    { name: "Sky", value: "#0284c7" },
+  ];
 
-  const handleCreate = async () => {
+  const staticImages = [
+    "https://images.unsplash.com/photo-1460500063983-994d4c27756c?auto=format&fit=crop&q=80&w=800",
+    "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&q=80&w=800",
+    "https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&q=80&w=800",
+    "https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?auto=format&fit=crop&q=80&w=800",
+  ];
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
     if (!title.trim()) {
-      alert("Board title is required.");
+      toast.error("Board title is required");
       return;
     }
 
-    const res = await ApiClient.post("/boards", {
-      title,
-      color: selectedColor,
-      image: selectedImage,
-      visibility,
-    });
+    setLoading(true);
+    try {
+      const boardData = {
+        title: title.trim(),
+        description: description.trim(),
+        color: color,
+        visibility: visibility,
+      };
 
-    if (res.success) {
-      refreshBoards();
-      onClose();
-      navigate(`/boards/${res.data._id}`);
+      // Only add image if it exists
+      if (image) {
+        boardData.image = image;
+      }
+
+      const res = await ApiClient.post("/boards", boardData);
+      
+      if (res.success) {
+        toast.success("Board created successfully!");
+        if (refreshBoards) refreshBoards();
+        onClose();
+      }
+    } catch (err) {
+      console.error("Error creating board:", err);
+      toast.error(err.response?.data?.message || "Failed to create board");
+    } finally {
+      setLoading(false);
     }
   };
 
+  const handleRemoveImage = () => {
+    setImage("");
+    toast.success("Image removed");
+  };
+
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/80 px-4 py-6 backdrop-blur-sm">
-      <div className="w-full max-w-lg rounded-[32px] border border-white/10 bg-slate-950/95 p-6 shadow-2xl shadow-cyan-500/20">
-        <div className="mb-6 flex items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-semibold text-slate-100">Create new board</h2>
-            <p className="mt-2 text-sm text-slate-400">Choose a background and name your next project board.</p>
-          </div>
-          <button
-            onClick={onClose}
-            className="inline-flex h-11 items-center justify-center rounded-2xl border border-slate-800 bg-slate-900 px-4 text-sm text-slate-300 transition hover:bg-slate-800"
-          >
-            Close
-          </button>
-        </div>
-
-        <div
-          className="mb-6 flex h-28 items-center justify-center rounded-3xl bg-slate-900 text-slate-100"
-          style={{
-            background: selectedImage
-              ? `linear-gradient(180deg, rgba(15,23,42,0.2) 0%, rgba(15,23,42,0.9) 100%), url(${selectedImage}) center/cover`
-              : selectedColor,
-          }}
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      <div className="relative rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-800 to-slate-900 shadow-2xl w-full max-w-md p-8 animate-in fade-in zoom-in-95">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-2 hover:bg-slate-700 rounded-lg transition"
         >
-          <span className="text-xl font-semibold text-white">{title || "Board preview"}</span>
-        </div>
+          <FiX className="text-xl text-slate-400" />
+        </button>
 
-        <div className="space-y-4">
-          <input
-            type="text"
-            placeholder="Board Title..."
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full rounded-3xl border border-slate-800 bg-slate-900 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
-          />
+        <h2 className="text-2xl font-bold text-white mb-2">Create New Board</h2>
+        <p className="text-slate-400 mb-6">Set up your workspace board</p>
 
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Title Input */}
           <div>
-            <p className="mb-3 text-sm text-slate-300">Background color</p>
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              Board Title <span className="text-red-400">*</span>
+            </label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g., Product Roadmap, Marketing Campaign..."
+              className="w-full px-4 py-3 rounded-lg bg-slate-700/50 border border-slate-600 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 transition"
+              autoFocus
+              required
+            />
+          </div>
+
+          {/* Description Input */}
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              Description (Optional)
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="What is this board about?"
+              rows="3"
+              className="w-full px-4 py-3 rounded-lg bg-slate-700/50 border border-slate-600 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 transition resize-none"
+            />
+          </div>
+
+          {/* Visibility Option */}
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              Visibility
+            </label>
+            <select
+              value={visibility}
+              onChange={(e) => setVisibility(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg bg-slate-700/50 border border-slate-600 text-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 transition"
+            >
+              <option value="private">Private - Only you and invited members</option>
+              <option value="public">Public - Anyone with the link</option>
+            </select>
+          </div>
+
+          {/* Color Selection */}
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-3 flex items-center gap-2">
+              <IoColorPalette />
+              Board Color
+            </label>
             <div className="flex flex-wrap gap-3">
-              {colors.map((c) => (
+              {colorOptions.map((colorOption) => (
                 <button
-                  key={c}
+                  key={colorOption.value}
                   type="button"
-                  onClick={() => {
-                    setSelectedColor(c);
-                    setSelectedImage("");
-                  }}
-                  className={`h-10 w-10 rounded-full border-2 transition ${
-                    selectedColor === c && !selectedImage
-                      ? "border-white"
-                      : "border-transparent"
+                  onClick={() => setColor(colorOption.value)}
+                  className={`h-12 w-12 rounded-xl transition-all transform ${
+                    color === colorOption.value
+                      ? "ring-4 ring-white shadow-xl scale-110"
+                      : "hover:scale-105"
                   }`}
-                  style={{ background: c }}
+                  style={{ backgroundColor: colorOption.value }}
+                  title={colorOption.name}
                 />
               ))}
             </div>
           </div>
 
+          {/* Static Images Section */}
           <div>
-            <p className="mb-3 text-sm text-slate-300">Or choose a background image</p>
-            <div className="grid grid-cols-5 gap-3">
-              {images.map((img) => (
+            <div className="flex items-center justify-between mb-3">
+              <label className="block text-sm font-medium text-slate-300 flex items-center gap-2">
+                <FiImage />
+                Board Background (Optional)
+              </label>
+              {image && (
                 <button
-                  key={img}
                   type="button"
-                  onClick={() => setSelectedImage(img)}
-                  className={`overflow-hidden rounded-3xl border-2 transition ${
-                    selectedImage === img ? "border-white" : "border-transparent"
-                  }`}
+                  onClick={handleRemoveImage}
+                  className="text-xs px-3 py-1 rounded-lg bg-red-600/90 text-white hover:bg-red-700 transition"
                 >
-                  <img src={img} alt="theme" className="h-16 w-full object-cover" />
+                  Remove Image
                 </button>
+              )}
+            </div>
+
+            <div className="grid grid-cols-4 gap-3 mb-3">
+              {staticImages.map((imgUrl, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setImage(imgUrl)}
+                  className={`h-20 rounded-lg bg-cover bg-center transition-all transform ${
+                    image === imgUrl
+                      ? "ring-2 ring-indigo-500 shadow-xl scale-105"
+                      : "hover:scale-105 opacity-80 hover:opacity-100 border border-slate-600"
+                  }`}
+                  style={{ backgroundImage: `url(${imgUrl})` }}
+                />
               ))}
+            </div>
+
+            {/* Preview of current selection */}
+            <div className="mt-3">
+              <p className="text-xs text-slate-400 mb-2">Preview:</p>
+              <div 
+                className="h-20 rounded-lg flex items-center justify-center text-white text-sm font-medium"
+                style={{ 
+                  backgroundColor: image ? undefined : color,
+                  backgroundImage: image ? `url(${image})` : undefined,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center"
+                }}
+              >
+                {title ? title.slice(0, 30) : "Board Preview"}
+              </div>
             </div>
           </div>
 
-          <div>
-            <p className="mb-3 text-sm text-slate-300">Visibility</p>
-            <select
-              value={visibility}
-              onChange={(e) => setVisibility(e.target.value)}
-              className="w-full rounded-3xl border border-slate-800 bg-slate-900 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
+          {/* Action Buttons */}
+          <div className="flex gap-3 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={loading}
+              className="flex-1 px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-700 transition disabled:opacity-50"
             >
-              <option value="private">Private</option>
-              <option value="workspace">Workspace</option>
-              <option value="public">Public</option>
-            </select>
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-700 hover:to-cyan-700 text-white font-medium transition transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {loading ? "Creating..." : "Create Board"}
+            </button>
           </div>
-        </div>
-
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
-          <button
-            onClick={onClose}
-            className="rounded-3xl border border-slate-800 bg-slate-900 px-5 py-3 text-sm font-semibold text-slate-300 transition hover:bg-slate-800"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleCreate}
-            className="rounded-3xl bg-gradient-to-r from-indigo-600 to-cyan-500 px-5 py-3 text-sm font-semibold text-white transition hover:shadow-xl"
-          >
-            Create Board
-          </button>
-        </div>
+        </form>
       </div>
     </div>
   );

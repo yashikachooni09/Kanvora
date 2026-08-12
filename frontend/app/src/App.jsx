@@ -1,19 +1,31 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import Login from "./Pages/Login/Login";
 import Signup from "./Pages/Signup/Signup";
+import ForgotPassword from "./Pages/ForgotPassword/ForgotPassword";
+import ResetPassword from "./Pages/ResetPassword/ResetPassword";
 import MainLayout from "./Components/common/layout/MainLayout";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import { Page } from "./Pages/MainPage/Page";
 import BoardsPage from "./Pages/BoardPage/BoardPage";
 import BoardDetails from "./Pages/BoardPage/BoardDetail";
+import StarredPage from "./Pages/StarredPage/StarredPage";
+import WorkspacePage from "./Pages/WorkspacePage/WorkspacePage";
+import SearchResults from "./Pages/SearchResults/SearchResults";
+import SettingsPage from "./Pages/SettingsPage/SettingsPage";
 
 // ✅ Protected Route Component
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
+  const location = useLocation();
 
-  return token ? children : <Navigate to="/login" />;
+  if (!token) {
+    const redirectPath = encodeURIComponent(location.pathname + location.search);
+    return <Navigate to={`/login?redirect=${redirectPath}`} state={{ from: location }} replace />;
+  }
+
+  return children;
 };
 
 function App() {
@@ -32,6 +44,8 @@ function App() {
       {/* ✅ Public Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
 
       {/* ✅ Protected Routes with Layout */}
       <Route
@@ -67,15 +81,60 @@ function App() {
         }
       />
       <Route
-  path="/boards/:id"
-  element={
-    <PrivateRoute>
-      <MainLayout>
-        <BoardDetails />
-      </MainLayout>
-    </PrivateRoute>
-  }
-/>
+        path="/boards/:id"
+        element={
+          <PrivateRoute>
+            <MainLayout>
+              <BoardDetails />
+            </MainLayout>
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/starred"
+        element={
+          <PrivateRoute>
+            <MainLayout>
+              <StarredPage />
+            </MainLayout>
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/workspace/:id"
+        element={
+          <PrivateRoute>
+            <MainLayout>
+              <WorkspacePage />
+            </MainLayout>
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/search"
+        element={
+          <PrivateRoute>
+            <MainLayout>
+              <SearchResults />
+            </MainLayout>
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/settings"
+        element={
+          <PrivateRoute>
+            <MainLayout>
+              <SettingsPage />
+            </MainLayout>
+          </PrivateRoute>
+        }
+      />
+
       {/* ✅ Catch all */}
       <Route path="*" element={<Navigate to="/" />} />
 

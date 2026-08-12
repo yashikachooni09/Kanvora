@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -13,7 +13,7 @@
 
   body {
     min-height: 100vh;
-    background-color: #0f172a;
+    background: linear-gradient(135deg, #0f172a 0%, #1a1f35 50%, #0f172a 100%);
     color: #f8fafc;
     font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -22,5 +22,97 @@
 
   * {
     box-sizing: border-box;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+  }
+
+  * {
+    scrollbar-color: #475569 transparent;
+    scrollbar-width: thin;
+  }
+}
+
+@layer components {
+
+  /* Input & Textarea Styling */
+  input,
+  textarea,
+  select {
+    @apply bg-slate-800 text-white;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    @apply text-slate-400;
+  }
+
+  label {
+    @apply text-slate-200;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-cyan-500/30 text-white;
+  }
+
+  ::-moz-selection {
+    @apply bg-cyan-500/30 text-white;
+  }
+
+  /* Focus */
+  input:focus,
+  textarea:focus,
+  select:focus {
+    @apply ring-2 ring-cyan-400/50 outline-none;
+  }
+
+  /* Buttons */
+  button {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  /* Cards */
+  .card-shadow {
+    @apply shadow-lg shadow-slate-950/50;
+  }
+
+  .card-shadow-hover:hover {
+    @apply shadow-xl shadow-slate-950/50;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-indigo-400 via-cyan-400 to-indigo-400 bg-clip-text text-transparent;
+  }
+
+  .border-gradient {
+    @apply border border-transparent bg-clip-border bg-gradient-to-r from-indigo-500 via-cyan-400 to-indigo-500;
+  }
+
+  .smooth-spin {
+    animation: smooth-spin 3s linear infinite;
+  }
+
+  @keyframes smooth-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
 }
