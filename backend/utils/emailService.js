@@ -1,8 +1,5 @@
 const nodemailer = require("nodemailer");
 
-/**
- * Creates and returns a Nodemailer transporter configured for Gmail or custom SMTP.
- */
 const getTransporter = () => {
   const emailUser = process.env.EMAIL_USER;
   const emailPass = process.env.EMAIL_PASSWORD;
@@ -23,11 +20,7 @@ const getTransporter = () => {
   });
 };
 
-/**
- * Sends a board invitation email to recipient.
- * Tries configured Gmail/SMTP first; if credentials fail (535 Bad Credentials),
- * automatically falls back to an Ethereal sandbox to avoid UI errors.
- */
+
 exports.sendBoardInviteEmail = async ({
   toEmail,
   inviterName = "A team member",
@@ -51,50 +44,34 @@ exports.sendBoardInviteEmail = async ({
     <html>
     <head>
       <meta charset="utf-8">
-      <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f172a; margin: 0; padding: 40px 20px; color: #f8fafc; }
-        .container { max-width: 560px; margin: 0 auto; background: #1e293b; border-radius: 16px; border: 1px solid #334155; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); }
-        .header { background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%); padding: 32px 24px; text-align: center; }
-        .header h1 { margin: 0; color: #ffffff; font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
-        .header p { margin: 6px 0 0 0; color: #e0e7ff; font-size: 14px; opacity: 0.9; }
-        .content { padding: 32px 28px; }
-        .message { font-size: 16px; line-height: 1.6; color: #cbd5e1; margin-bottom: 24px; }
-        .board-card { background: #0f172a; border-radius: 12px; border: 1px solid #334155; padding: 20px; margin-bottom: 28px; }
-        .board-title { font-size: 20px; font-weight: 700; color: #38bdf8; margin: 0 0 8px 0; }
-        .role-badge { display: inline-block; background: rgba(99, 102, 241, 0.2); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.4); padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
-        .btn-container { text-align: center; margin: 32px 0; }
-        .btn { display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff !important; font-size: 16px; font-weight: 600; text-decoration: none; padding: 14px 36px; border-radius: 10px; box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3); transition: all 0.2s ease; }
-        .footer { background: #0f172a; border-top: 1px solid #334155; padding: 20px 28px; text-align: center; font-size: 13px; color: #64748b; }
-        .footer p { margin: 4px 0; }
-      </style>
     </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <h1>Kanvora Workspace</h1>
-          <p>Collaborative Board Invitation</p>
+    <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f172a; margin: 0; padding: 40px 20px; color: #f8fafc;">
+      <div style="max-width: 560px; margin: 0 auto; background: #1e293b; border-radius: 16px; border: 1px solid #334155; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);">
+        <div style="background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%); padding: 32px 24px; text-align: center;">
+          <h1 style="margin: 0; color: #ffffff; font-size: 26px; font-weight: 700; letter-spacing: -0.5px;">Kanvora Workspace</h1>
+          <p style="margin: 6px 0 0 0; color: #e0e7ff; font-size: 14px; opacity: 0.9;">Collaborative Board Invitation</p>
         </div>
-        <div class="content">
-          <p class="message">
-            Hi there! <strong>${inviterName}</strong> has invited you to collaborate on a board in Kanvora.
+        <div style="padding: 32px 28px;">
+          <p style="font-size: 16px; line-height: 1.6; color: #cbd5e1; margin-bottom: 24px;">
+            Hi there! <strong style="color: #ffffff;">${inviterName}</strong> has invited you to collaborate on a board in Kanvora.
           </p>
 
-          <div class="board-card">
-            <div class="board-title">📋 ${boardTitle}</div>
-            <div><span class="role-badge">Permission: ${formattedRole}</span></div>
+          <div style="background: #0f172a; border-radius: 12px; border: 1px solid #334155; padding: 20px; margin-bottom: 28px;">
+            <div style="font-size: 20px; font-weight: 700; color: #38bdf8; margin: 0 0 8px 0;">📋 ${boardTitle}</div>
+            <div><span style="display: inline-block; background: rgba(99, 102, 241, 0.2); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.4); padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;">Permission: ${formattedRole}</span></div>
           </div>
 
-          <div class="btn-container">
-            <a href="${boardUrl}" class="btn">Go to Board</a>
+          <div style="text-align: center; margin: 32px 0;">
+            <a href="${boardUrl}" style="display: inline-block; background-color: #10b981; color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none; padding: 14px 36px; border-radius: 10px; border: 1px solid #059669;">Go to Board</a>
           </div>
 
           <p style="font-size: 14px; color: #94a3b8; line-height: 1.5;">
-            Click the button above to access the board directly. If you are not logged in as <strong>${toEmail}</strong>, you will be prompted to log in or sign up with <strong>${toEmail}</strong> before accessing this board.
+            Click the button above to access the board directly. If you are not logged in as <strong style="color: #ffffff;">${toEmail}</strong>, you will be prompted to log in or sign up with <strong style="color: #ffffff;">${toEmail}</strong> before accessing this board.
           </p>
         </div>
-        <div class="footer">
-          <p>Sent by Kanvora Board Management System</p>
-          <p style="font-size: 11px;">If you weren't expecting this invitation, you can safely ignore this email.</p>
+        <div style="background: #0f172a; border-top: 1px solid #334155; padding: 20px 28px; text-align: center; font-size: 13px; color: #64748b;">
+          <p style="margin: 4px 0;">Sent by Kanvora Board Management System</p>
+          <p style="font-size: 11px; margin: 4px 0;">If you weren't expecting this invitation, you can safely ignore this email.</p>
         </div>
       </div>
     </body>

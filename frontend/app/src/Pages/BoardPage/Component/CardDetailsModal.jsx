@@ -736,14 +736,6 @@ const CardDetailsModal = ({ card, isOpen, isViewer = false, boardId, onClose, on
                 )}
                 {!isViewer && (
                   <button 
-                    onClick={handleArchive}
-                    className="w-full flex items-center gap-2 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded transition"
-                  >
-                    <FiArchive className="text-slate-400" /> Archive
-                  </button>
-                )}
-                {!isViewer && (
-                  <button 
                     onClick={handleDelete}
                     className="w-full flex items-center gap-2 px-3 py-1.5 bg-slate-800 hover:bg-red-600/20 text-slate-200 hover:text-red-400 text-sm font-medium rounded transition"
                   >

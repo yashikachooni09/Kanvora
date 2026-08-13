@@ -570,27 +570,6 @@ const CardDetailsModal = ({ card, isOpen, onClose, onUpdate }) => {
 
           {!editMode && (
             <div className="flex gap-2">
-              {isArchived ? (
-                <button
-                  onClick={handleUnarchive}
-                  disabled={loading}
-                  className="flex-1 px-4 py-2 rounded-lg text-sm font-medium text-slate-200 bg-slate-700 hover:bg-green-600/50 transition disabled:opacity-50 flex items-center justify-center gap-2"
-                  title="Unarchive this card"
-                >
-                  <FiRefreshCw className="text-sm" />
-                  Unarchive
-                </button>
-              ) : (
-                <button
-                  onClick={handleArchive}
-                  disabled={loading}
-                  className="flex-1 px-4 py-2 rounded-lg text-sm font-medium text-slate-200 bg-slate-700 hover:bg-blue-600/50 transition disabled:opacity-50 flex items-center justify-center gap-2"
-                  title="Archive this card"
-                >
-                  <FiArchive className="text-sm" />
-                  Archive
-                </button>
-              )}
               <button
                 onClick={handleDelete}
                 disabled={loading}
