@@ -223,7 +223,6 @@ exports.deleteBoard = async (req, res) => {
   }
 };
 
-// ✅ INVITE USER TO BOARD
 exports.inviteBoard = async (req, res) => {
   try {
     const { id } = req.params;
