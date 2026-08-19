@@ -5,6 +5,7 @@ const {
   createList,
   getLists,
   deleteList,
+  updateList,
 } = require("../controllers/listController");
 
 const auth = require("../middlewares/auth");
@@ -14,6 +15,9 @@ router.post("/", auth, createList);
 
 // ✅ Get Lists (by boardId)
 router.get("/", auth, getLists);
+
+// ✅ Update List
+router.put("/:id", auth, updateList);
 
 // ✅ Delete List
 router.delete("/:id", auth, deleteList);
