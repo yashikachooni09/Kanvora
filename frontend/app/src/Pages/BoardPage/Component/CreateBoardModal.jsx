@@ -117,7 +117,7 @@ const CreateBoardModal = ({ onClose, refreshBoards }) => {
           </div>
 
           {/* Visibility Option */}
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">
               Visibility
             </label>
@@ -129,7 +129,7 @@ const CreateBoardModal = ({ onClose, refreshBoards }) => {
               <option value="private">Private - Only you and invited members</option>
               <option value="public">Public - Anyone with the link</option>
             </select>
-          </div>
+          </div> */}
 
           {/* Color Selection */}
           <div>

@@ -85,6 +85,41 @@ exports.getLists = async (req, res) => {
   }
 };
 
+// ✅ UPDATE LIST
+exports.updateList = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title } = req.body;
+
+    const list = await List.findById(id);
+    if (!list) {
+      return res.status(404).json({ success: false, message: "List not found" });
+    }
+
+    const perm = await checkBoardPermission(list.boardId, req.user.id);
+    if (!perm.allowed) {
+      return res.status(403).json({ success: false, message: perm.message });
+    }
+    if (perm.isViewer) {
+      return res.status(403).json({ success: false, message: "Viewers have read-only access" });
+    }
+
+    list.title = title || list.title;
+    await list.save();
+
+    res.json({
+      success: true,
+      data: list,
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 // ✅ DELETE LIST
 exports.deleteList = async (req, res) => {
   try {
