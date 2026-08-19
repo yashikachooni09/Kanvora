@@ -64,7 +64,7 @@ exports.createCard = async (req, res) => {
   }
 };
 
-// ✅ Get Cards by List (exclude archived)
+
 exports.getCards = async (req, res) => {
   try {
     const { listId } = req.query;
