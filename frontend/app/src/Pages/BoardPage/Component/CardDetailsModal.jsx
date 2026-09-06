@@ -1,25 +1,25 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import * as ReactDOM from "react-dom";
+// import * as ReactDOM from "react-dom";
 
-// Polyfill for ReactDOM.findDOMNode for newer React builds where it's not available.
-// ReactQuill uses findDOMNode internally; without this, it throws on mount.
-if (typeof ReactDOM.findDOMNode !== "function") {
-  ReactDOM.findDOMNode = function (inst) {
-    if (!inst) return null;
-    if (inst.nodeType) return inst;
-    if (inst.editor && inst.editor.root) return inst.editor.root;
-    if (typeof inst.getEditor === "function") {
-      try {
-        const e = inst.getEditor();
-        if (e && e.root) return e.root;
-      } catch (err) {
-        return null;
-      }
-    }
-    return null;
-  };
-}
+// // Polyfill for ReactDOM.findDOMNode for newer React builds where it's not available.
+// // ReactQuill uses findDOMNode internally; without this, it throws on mount.
+// if (typeof ReactDOM.findDOMNode !== "function") {
+//   ReactDOM.findDOMNode = function (inst) {
+//     if (!inst) return null;
+//     if (inst.nodeType) return inst;
+//     if (inst.editor && inst.editor.root) return inst.editor.root;
+//     if (typeof inst.getEditor === "function") {
+//       try {
+//         const e = inst.getEditor();
+//         if (e && e.root) return e.root;
+//       } catch (err) {
+//         return null;
+//       }
+//     }
+//     return null;
+//   };
+// }
 
 import { 
   FiX, FiPlus, FiTag, FiPaperclip, FiArchive, FiTrash2, 
