@@ -42,7 +42,7 @@ const LoginForm = () => {
     setLoading(true);
 
     try {
-      const res = await ApiClient.post("/auth/login", {
+      const res = await ApiClient.post("/api/auth/login", {
         email,
         password,
       });
